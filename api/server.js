@@ -12,6 +12,7 @@ console.log('server.js using port ' + port);
 const Family = require('./app/models/family');
 const Member = require('./app/models/member');
 const ListItem = require('./app/models/listItem');
+const UrlEmail = require('./app/models/urlEmail');
 
 const router = express.Router();
 app.use('/api', router);
@@ -23,26 +24,26 @@ router.get('/', (req, res) => {
   res.json({message: 'test'});
 });
 router.post('/family', (req, res) => {
-    const family = new Family();
-    family.famId = 'f-1000';
-    family.members = {};
-    const memberId = 'randomstring';
-    family.members[memberId] = new Member()
-    family.members[memberId].name = req.body.name;
-    family.members[memberId].email = req.body.email;
-    family.members[memberId].parent = true;
-    family.members[memberId].deleted = false;
-    family.members[memberId].list = {};
-    family.save((err) => {
-      if (err) {
-        res.send(err);
-      };
-      res.json(family);
-    });
-  })
+  const family = new Family();
+  family.famId = 'f-1000';
+  family.members = {};
+  const memberId = 'randomstring';
+  family.members[memberId] = new Member()
+  family.members[memberId].name = req.body.name;
+  family.members[memberId].email = req.body.email;
+  family.members[memberId].parent = true;
+  family.members[memberId].deleted = false;
+  family.members[memberId].list = {};
+  family.save((err) => {
+    if (err) {
+      res.send(err);
+    };
+    res.json(family);
+  });
+})
 router.get('/:family_id/:member_id', async (req, res) => {
   try {
-    const familyArray = await Family.find({ famId: req.params.family_id }, '-members.' + req.params.member_id + '._id -_id -__v')
+    const familyArray = await Family.find({ famId: req.params.family_id }, `-members.${req.params.member_id}._id -_id -__v`)
     const family = familyArray[0];
     if (family.members[req.params.member_id] &&
         family.members[req.params.member_id].deleted === false) {
@@ -54,6 +55,10 @@ router.get('/:family_id/:member_id', async (req, res) => {
     console.error(err);
     res.send(err);
   }
+});
+router.get('/email-test', async (req, res) => {
+    const sentEmail = await UrlEmail.send('ender@happyleviathan.com', '');
+    res.status(sentEmail.status).send(sentEmail.body);
 });
 
 const mongoose = require('mongoose');
