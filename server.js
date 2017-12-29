@@ -3,22 +3,27 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const uuid = require('uuid/v1');
-const hostUrl = 'http://localhost:8080/web/';
-
-// app setup
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// port setup
-const port = process.env.PORT || 8080;
-app.listen(port);
-console.log('server.js using port ' + port);
-
 // internal requirements
 const Family = require('./app/models/family');
 const Member = require('./app/models/member');
 const ListItem = require('./app/models/listItem');
 const UrlEmail = require('./app/models/urlEmail');
+const Config = require('./config');
+
+let hostUrl = Config.deployHostUrl;
+if (process.env.USERDOMAIN === 'JEDHA') {
+  const hostUrl = Config.localHostUrl;
+}
+
+// app setup
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static('web'));
+
+// port setup
+const port = process.env.PORT || 8080;
+app.listen(port);
+console.log('server.js using port ' + port);
 
 // routing
 const router = express.Router();
@@ -88,7 +93,7 @@ router.post('/email', async (req, res) => {
 // database setup (mongodb on mlab)
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://christmas-list:xmas1225@ds019698.mlab.com:19698/ender-christmas-list', { useMongoClient: true} , (err) => {
+mongoose.connect(`mongodb://${Config.mongoosePublic}:${Config.mongoosePrivate}@ds019698.mlab.com:19698/ender-christmas-list`, { useMongoClient: true} , (err) => {
   if(!err) {
     console.log('connected to mongo')
   };

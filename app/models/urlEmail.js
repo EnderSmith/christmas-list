@@ -1,5 +1,6 @@
+const Config = require('../../config.js');
 const Mailjet = require('node-mailjet')
-  .connect('ef5d49e44c7d35a97d69caccb458c379', '3f5a4a4a8bc726e67b7e0e9185bd04cb');
+  .connect(Config.mailjetPublic, Config.mailjetPrivate);
 const mailjetSend = Mailjet.post('send');
 
 const UrlEmail = {

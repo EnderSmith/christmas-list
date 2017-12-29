@@ -4,12 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="web.js"></script>
+  <link rel="stylesheet" href="style.css">
   <title>Christmas List</title>
 </head>
 <body>
-  <form action="http://localhost:8080/api/email" method="post">
-    enter your email:
-    <input type="email" id="email">
+  <form id="emailForm">
+    enter your email: <br>
+    <input type="email" name="email" id="email">
   </form>
 </body>
 </html>
