@@ -28,16 +28,16 @@ console.log('server.js using port ' + port);
 // routing
 const router = express.Router();
 // USE middleware
-app.use('/api', router);
+app.use('/', router);
 router.use((req, res, next) => {
   console.log('api: ' + req.method + ' ' + req.url);
   next();
 });
-router.get('/', (req, res) => {
+router.get('/api', (req, res) => {
   res.json({message: 'routing works'});
 });
 // POST new family
-router.post('/new/family', (req, res) => {
+router.post('/api/new/family', (req, res) => {
   const family = newFamily(req.body.name, req.body.email);
   family.save((err) => {
     if (err) {
@@ -66,12 +66,12 @@ router.get('/family/:family_id/:member_id', async (req, res) => {
 // PUT mark existing member as deleted
 
 // GET email test
-router.get('/email-test', async (req, res) => {
+router.get('/api/email-test', async (req, res) => {
     const sentEmail = await UrlEmail.send('ender@happyleviathan.com', '');
     res.status(sentEmail.status).send(sentEmail.body);
 });
 // POST email
-router.post('/email', async (req, res) => {
+router.post('/api/email', async (req, res) => {
   const family = await Family.findOne({ 'members.email': req.body.email });
   if (family === null) {
     const family = newFamily(req.body.name, req.body.email);
