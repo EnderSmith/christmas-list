@@ -1,46 +1,47 @@
+// external requirements
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const uuid = require('uuid/v1');
+const hostUrl = 'http://localhost:8080/web/';
 
+// app setup
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// port setup
 const port = process.env.PORT || 8080;
 app.listen(port);
 console.log('server.js using port ' + port);
 
+// internal requirements
 const Family = require('./app/models/family');
 const Member = require('./app/models/member');
 const ListItem = require('./app/models/listItem');
 const UrlEmail = require('./app/models/urlEmail');
 
+// routing
 const router = express.Router();
+// USE middleware
 app.use('/api', router);
 router.use((req, res, next) => {
   console.log('api: ' + req.method + ' ' + req.url);
   next();
 });
 router.get('/', (req, res) => {
-  res.json({message: 'test'});
+  res.json({message: 'routing works'});
 });
-router.post('/family', (req, res) => {
-  const family = new Family();
-  family.famId = 'f-1000';
-  family.members = {};
-  const memberId = 'randomstring';
-  family.members[memberId] = new Member()
-  family.members[memberId].name = req.body.name;
-  family.members[memberId].email = req.body.email;
-  family.members[memberId].parent = true;
-  family.members[memberId].deleted = false;
-  family.members[memberId].list = {};
+// POST new family
+router.post('/new/family', (req, res) => {
+  const family = newFamily(req.body.name, req.body.email);
   family.save((err) => {
     if (err) {
-      res.send(err);
+      res.status(500).send(err);
     };
     res.json(family);
   });
 })
+// GET existing member
 router.get('/:family_id/:member_id', async (req, res) => {
   try {
     const familyArray = await Family.find({ famId: req.params.family_id }, `-members.${req.params.member_id}._id -_id -__v`)
@@ -56,11 +57,35 @@ router.get('/:family_id/:member_id', async (req, res) => {
     res.send(err);
   }
 });
+// PUT mark existing member as deleted
+
+// GET email test
 router.get('/email-test', async (req, res) => {
     const sentEmail = await UrlEmail.send('ender@happyleviathan.com', '');
     res.status(sentEmail.status).send(sentEmail.body);
 });
+// POST email
+router.post('/email', async (req, res) => {
+  const family = await Family.findOne({ 'members.email': req.body.email });
+  if (family === null) {
+    const family = newFamily(req.body.name, req.body.email);
+    family.save(async (err) => {
+      if (err) {
+        res.status(500).send(err);
+      };
+      const url = createUrl(family.famId, family.members[0].memberId);
+      const sentEmail = await UrlEmail.send(req.body.email, url);
+      res.status(sentEmail.status).send(sentEmail.body); 
+    });
+  } else {
+    const member = family.members.find(member => member.email === req.body.email);
+    const url = createUrl(family.famId, member.memberId);
+    const sentEmail = await UrlEmail.send(req.body.email, url);
+    res.status(sentEmail.status).send(sentEmail.body);   
+  }
+});
 
+// database setup (mongodb on mlab)
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://christmas-list:xmas1225@ds019698.mlab.com:19698/ender-christmas-list', { useMongoClient: true} , (err) => {
@@ -68,3 +93,23 @@ mongoose.connect('mongodb://christmas-list:xmas1225@ds019698.mlab.com:19698/ende
     console.log('connected to mongo')
   };
 });
+
+function newFamily(name, email) {
+  const family = new Family();
+  family.famId = uuid();
+  const memberId = uuid();
+  family.members = [];
+  const parent = new Member()
+  parent.memberId = memberId;
+  parent.name = name;
+  parent.email = email;
+  parent.parent = true;
+  parent.deleted = false;
+  parent.list = {};
+  family.members.push(parent);
+  return family;
+};
+
+function createUrl(familyId, memberId) {
+  return `${hostUrl}family/${familyId}/${memberId}`;
+}
