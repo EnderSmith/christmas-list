@@ -12,7 +12,7 @@ const Config = require('./config');
 
 let hostUrl = Config.deployHostUrl;
 if (process.env.USERDOMAIN === 'JEDHA') {
-  const hostUrl = Config.localHostUrl;
+  hostUrl = Config.localHostUrl;
 }
 
 // app setup
@@ -47,20 +47,21 @@ router.post('/new/family', (req, res) => {
   });
 })
 // GET existing member
-router.get('/:family_id/:member_id', async (req, res) => {
-  try {
-    const familyArray = await Family.find({ famId: req.params.family_id }, `-members.${req.params.member_id}._id -_id -__v`)
-    const family = familyArray[0];
-    if (family.members[req.params.member_id] &&
-        family.members[req.params.member_id].deleted === false) {
-      res.json(family);
-    } else {
-      throw 'account not found';
-    }
-  } catch (err) {
-    console.error(err);
-    res.send(err);
-  }
+router.get('/family/:family_id/:member_id', async (req, res) => {
+  // try {
+  //   const familyArray = await Family.find({ famId: req.params.family_id }, `-members.${req.params.member_id}._id -_id -__v`)
+  //   const family = familyArray[0];
+  //   if (family.members[req.params.member_id] &&
+  //       family.members[req.params.member_id].deleted === false) {
+  //     res.json(family);
+  //   } else {
+  //     throw 'account not found';
+  //   }
+  // } catch (err) {
+  //   console.error(err);
+  //   res.send(err);
+  // }
+  res.sendfile('index.html', {root: './web'});
 });
 // PUT mark existing member as deleted
 
