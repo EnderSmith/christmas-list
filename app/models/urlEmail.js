@@ -9,7 +9,7 @@ const UrlEmail = {
       FromEmail: 'christmas-list@outlook.com',
       FromName: 'Christmas List',
       Subject: 'Your List',
-      'Text-part': `Hello,\nYour link is ${uniqueLink}\n--Christmas List`,
+      'Text-part': `Hello,\nYour link is ${uniqueLink} \n\n--Christmas List`,
       Recipients: [{ Email: recipient }],
     };
     let output = {
