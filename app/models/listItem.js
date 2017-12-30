@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 const ListItemSchema = new Schema({
   title: String,
-  link: String,
   purchased: Boolean,
   locked: Boolean,
   deleted: Boolean,

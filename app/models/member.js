@@ -7,7 +7,7 @@ const MemberSchema = new Schema({
   email: String,
   parent: Boolean,
   deleted: Boolean,
-  list: Object
+  list: Array
 });
 
 module.exports = mongoose.model('Member', MemberSchema);

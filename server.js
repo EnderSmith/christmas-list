@@ -46,22 +46,19 @@ router.post('/api/new/family', (req, res) => {
     res.json(family);
   });
 })
-// GET existing member
+// GET family api
+router.get('/api/family/:familyId/:memberId', async (req, res) => {
+  const family = await Family.findOne({ 'famId': req.params.familyId, 'members.memberId': req.params.memberId });
+  if (!!family) {
+    res.send(family);
+  } else {
+    res.status(404).send('family not found by member');
+  }
+});
+
+// GET redirect member
 router.get('/family/:family_id/:member_id', async (req, res) => {
-  // try {
-  //   const familyArray = await Family.find({ famId: req.params.family_id }, `-members.${req.params.member_id}._id -_id -__v`)
-  //   const family = familyArray[0];
-  //   if (family.members[req.params.member_id] &&
-  //       family.members[req.params.member_id].deleted === false) {
-  //     res.json(family);
-  //   } else {
-  //     throw 'account not found';
-  //   }
-  // } catch (err) {
-  //   console.error(err);
-  //   res.send(err);
-  // }
-  res.sendfile('index.html', {root: './web'});
+  res.sendFile('index.html', {root: './web'});
 });
 // PUT mark existing member as deleted
 
