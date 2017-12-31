@@ -1,7 +1,6 @@
 $(() => {
   //register listeners
-  $('#emailForm').submit(emailPost);
-
+  $('#emailSend').click(emailPost);
   // figure out what should be visible
   const currentRoute = router(window.location, {
     'root' : emailPage,
@@ -33,9 +32,15 @@ function emailPage() {
 async function listPage(seg) {
   const familyId = seg[2];
   const memberId = seg[3];
-  const family = await findFamily(familyId, memberId);
-  if (family.status === 404) {
-    familyNotFound();
+  let family = {};
+  try {
+    family = await findFamily(familyId, memberId);
+  } catch (err) {
+    if (family.status === 404) {
+      familyNotFound();
+    } else {
+      notification(JSON.stringify(err));
+    }
   }
   const memberIndex = findMemberIndex(family.members, memberId);
   const list = family.members[memberIndex].list;
@@ -45,7 +50,10 @@ async function listPage(seg) {
 
 function emailPost() {
   const recipient = $('#email')[0].value;
-  $.post('/api/email', { 'email': recipient });
+  if (!!recipient) {
+    $.post('/api/email', { 'email': recipient });
+    notification(`your link is being sent to ${recipient}`);
+  };
 };
 
 async function findFamily(familyId, memberId) {
@@ -80,3 +88,7 @@ function createHtmlList(list) {
   };
   return html;
 };
+
+function notification(message) {
+  $('#notification').html(`<div class="notification">${message}</div>`);  
+}

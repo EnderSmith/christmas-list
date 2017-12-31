@@ -69,9 +69,9 @@ router.get('/api/email-test', async (req, res) => {
 });
 // POST email
 router.post('/api/email', async (req, res) => {
-  const family = await Family.findOne({ 'members.email': req.body.email });
+  let family = await Family.findOne({ 'members.email': req.body.email });
   if (family === null) {
-    const family = newFamily(req.body.name, req.body.email);
+    family = newFamily(req.body.name, req.body.email);
     family.save(async (err) => {
       if (err) {
         res.status(500).send(err);
