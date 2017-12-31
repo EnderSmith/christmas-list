@@ -2,32 +2,20 @@ $(() => {
   //register listeners
   $('#emailForm').submit(emailPost);
 
-  //figure out what should be visible
-  const currentRoute = route(window.location, {
+  // figure out what should be visible
+  const currentRoute = router(window.location, {
     'root' : emailPage,
     'family' : listPage
   });
 
-  //run the page that should be visible (make it visible)
-
-
 });
 
-function emailPost() {
-  const recipient = $('#email')[0].value;
-  $.post('/api/email', { 'email': recipient });
-};
-
-function findFamily(familyId, memberId) {
-  return $.get(`/api/family/${familyId}/${memberId}`);
-};
-
-function route(location, routes) {
-  const segments = location.pathname.split('/');
+function router(location, routes) {
+  const pathSeg = location.pathname.split('/');
   let routeName = 'root';
 
-  if (segments.length > 1) {
-    routeName = segments[1];
+  if (pathSeg.length > 1) {
+    routeName = pathSeg[1];
   }
 
   let route = routes[routeName];
@@ -35,18 +23,60 @@ function route(location, routes) {
     route = routes['root'];
   }
 
-  return route.call(this, segments);
-}
+  return route.call(this, pathSeg);
+};
 
 function emailPage() {
 
-}
+};
 
 async function listPage(seg) {
   const familyId = seg[2];
   const memberId = seg[3];
-  console.log(await findFamily(familyId, memberId));
-}
+  const family = await findFamily(familyId, memberId);
+  if (family.status === 404) {
+    familyNotFound();
+  }
+  const memberIndex = findMemberIndex(family.members, memberId);
+  const list = family.members[memberIndex].list;
+  const htmlList = createHtmlList(list);
+  $(`#memberlist-${memberIndex}`).html(htmlList);
+};
 
-// const seg = window.location.href.split('/');
-// window.location.replace(`${seg[0]}//${seg[2]}/`);
+function emailPost() {
+  const recipient = $('#email')[0].value;
+  $.post('/api/email', { 'email': recipient });
+};
+
+async function findFamily(familyId, memberId) {
+  return await $.get(`/api/family/${familyId}/${memberId}`);
+};
+
+function familyNotFound() {
+  const seg = window.location.href.split('/');
+  window.location.replace(`${seg[0]}//${seg[2]}/`);
+};
+
+function findMemberIndex(membersArray, memberId) {
+  let memberIndex = -1;
+  for (const index in membersArray) {
+    if (membersArray[index].memberId === memberId) {
+      memberIndex = index
+    };
+  };
+  return memberIndex;
+};
+
+function createHtmlList(list) {
+  let html = 'your list: <br>';
+  for (const itemNumber in list) {
+    const item = list[itemNumber];
+    html += `<div id="listitem-${itemNumber}" class="listitem purchased-${item.purchased} locked-${item.locked}  deleted-${item.deleted}">
+    <span class="listitem-title">${item.title}</span>
+    <button class="purchased-button">✔</button>
+    <button class="lock-button">🔒</button>
+    <button class="delete-button">❌</button>
+    </div>`
+  };
+  return html;
+};
