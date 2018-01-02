@@ -1,6 +1,11 @@
 $(() => {
   //register listeners
   $('#emailSend').click(emailPost);
+  $('#email').keypress((event) => {
+    if (event.which === 13) {
+      emailPost();
+    }
+  });
   // figure out what should be visible
   const currentRoute = router(window.location, {
     'root' : emailPage,
@@ -82,13 +87,15 @@ function createHtmlList(list) {
     html += `<div id="listitem-${itemNumber}" class="listitem purchased-${item.purchased} locked-${item.locked}  deleted-${item.deleted}">
     <span class="listitem-title">${item.title}</span>
     <button class="purchased-button">✔</button>
+    <button class="edit-button">✏️</button>
     <button class="lock-button">🔒</button>
     <button class="delete-button">❌</button>
     </div>`
   };
+  html += '<div id="listitem-new"><input type="text" class="listitem-new-title"  placeholder="new list item"><button class="new-button">➕</button></div>'
   return html;
 };
 
 function notification(message) {
-  $('#notification').html(`<div class="notification">${message}</div>`);  
+  $('#notifications').html(`<div class="notification">${message}</div>`);  
 }
