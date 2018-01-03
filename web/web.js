@@ -46,7 +46,6 @@ function emailPage() {
 // this is the "single page" of this SPA
 async function listPage(seg) {
   // the function takes an array of pathname segments, split at "/"
-  notification('test');
   const familyId = seg[2];
   const memberId = seg[3]; 
   try {
@@ -59,10 +58,10 @@ async function listPage(seg) {
     }
   }
   // memberIndex is the index of the current member
-  const memberIndex = findMemberIndex(_g.family.members, memberId);
-  const list = _g.family.members[memberIndex].list;
-  const htmlList = createHtmlList(list);
-  $(`#memberlist-${memberIndex}`).html(htmlList);
+  const currentMemberIndex = findMemberIndex(_g.family.members, memberId);
+  const list = _g.family.members[currentMemberIndex].list;
+  const listHtml = createListHtml(list);
+  $(`#memberlist-${currentMemberIndex}`).html(listHtml);
   // adds button listeners for each item row in the list
   for (const itemNumber in list) {
     addItemListeners(`listitem-${itemNumber}`);
@@ -79,34 +78,40 @@ function findMemberIndex(membersArray, memberId) {
   return memberIndex;
 };
 
-function createHtmlList(list) {
+function createListHtml(list) {
   let html = 'your list: <br>';
   for (const itemNumber in list) {
     const item = list[itemNumber];
     html += `<div id="listitem-${itemNumber}" class="listitem purchased-${item.purchased} locked-${item.locked}  deleted-${item.deleted}">
     <span class="listitem-title">${item.title}</span>
-    <button class="purchase-button">✔</button>
-    <button class="edit-button">✏️</button>
-    <button class="lock-button">🔒</button>
-    <button class="delete-button">❌</button>
+    <button class="purchased-button">✔</button>
+    <button class="edited-button">✏️</button>
+    <button class="locked-button">🔒</button>
+    <button class="deleted-button">❌</button>
     </div>`;
   };
   html += '<div id="listitem-new"><input type="text" class="listitem-new-title"  placeholder="new list item"><button class="new-button">➕</button></div>'
   return html;
 };
 
+
+
 // event listeners
 function addItemListeners(itemId) {
-  const buttonNames = ['purchase', 'lock', 'delete'];
+  const buttonNames = ['purchased', 'locked', 'deleted'];
   for (const index in buttonNames) {
     $(`#${itemId} .${buttonNames[index]}-button`).on('click', () => {
-    listPost(itemId, 'purchased');
+    listPost(itemId, `${buttonNames[index]}`);
     });
   };
 };
 
 function removeItemListeners(itemId) {
   $(`#${itemId} button`).off('click');
+};
+
+function addListListeners(itemNumber, memberlistId) {
+
 };
 
 // API calls
@@ -128,14 +133,32 @@ function familyNotFound() {
 };
 
 function listPost(itemId, action) {
+  // notification(`${itemId} ${action}`);
   console.log(`listPost('${itemId}' ,'${action}') called`);
   removeItemListeners(itemId);
+  lookBusy('list-holder', true);
+  setTimeout(() => { lookBusy('list-holder', false) }, 5000);
 };
 
-// html notifications
+// notifications
 function notification(message) {
-  $('#notifications').html(`<div class="notification">${message}</div>`)
-  .delay(1000)
+  $('#notifications').html(`<div class="notification" style="display:none">${message}</div>`);
+  $('.notification')
+  .slideDown(300)
+  .delay(3000)
   .slideUp(300); 
-}
+};
 
+function lookBusy(id, set) {
+  if ($(`#${id}`).attr('data-busy') === 'true' || set === false) {
+    $(`#${id}`).attr('data-busy', 'false');
+    // to-do: handle this with css later
+    $(`#${id} .spinner`).fadeOut(200);
+    $(`#${id} *:not(.spinner)`).delay(200).fadeIn(500);
+  } else if ($(`#${id}`).attr('data-busy') !== 'true' || set === true) {
+    $(`#${id}`).attr('data-busy', 'true');
+    // to-do: handle this with css later
+    $(`#${id} *:not(.spinner)`).fadeOut(200);
+    $(`#${id} .spinner`).delay(200).fadeIn(500);
+  };
+};
