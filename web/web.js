@@ -138,7 +138,7 @@ function listPost(itemId, action) {
   removeItemListeners(itemId);
   lookBusy('list-holder', true);
   setTimeout(() => { lookBusy('list-holder', false) }, 5000);
-  setTimeout(() => { notification(`item ${action}`) }, 5700);
+  setTimeout(() => { notification(`item marked as ${action}`) }, 5700);
 };
 
 // notifications
