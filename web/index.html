@@ -10,18 +10,16 @@
   <title>Christmas List</title>
 </head>
 <body>
-  <div id="notifications">
-  </div>
   <div id="login">
     enter your email: <br>
     <input type="email" name="email" id="email">
     <button id="emailSend">send</button>
   </div>
-  <div>
-    <div id="memberdata-0">
-      </div>
-      <div id="memberlist-0">
-      </div>
+  <div id="notifications"></div>
+  <div id="list-holder" data-busy="false">
+    <div class="spinner" style="display:none">spinning...</div>
+    <div id="memberlist-0" class="memberlist">
+    </div>
   </div>
 </body>
 </html>
