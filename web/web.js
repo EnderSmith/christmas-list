@@ -51,6 +51,9 @@ async function listPage(seg) {
   const list = family.members[memberIndex].list;
   const htmlList = createHtmlList(list);
   $(`#memberlist-${memberIndex}`).html(htmlList);
+  for (const itemNumber in list) {
+    addListitemListeners(`listitem-${itemNumber}`);
+  }
 };
 
 function emailPost() {
@@ -86,11 +89,11 @@ function createHtmlList(list) {
     const item = list[itemNumber];
     html += `<div id="listitem-${itemNumber}" class="listitem purchased-${item.purchased} locked-${item.locked}  deleted-${item.deleted}">
     <span class="listitem-title">${item.title}</span>
-    <button class="purchased-button">✔</button>
+    <button class="purchase-button">✔</button>
     <button class="edit-button">✏️</button>
     <button class="lock-button">🔒</button>
     <button class="delete-button">❌</button>
-    </div>`
+    </div>`;
   };
   html += '<div id="listitem-new"><input type="text" class="listitem-new-title"  placeholder="new list item"><button class="new-button">➕</button></div>'
   return html;
@@ -99,3 +102,24 @@ function createHtmlList(list) {
 function notification(message) {
   $('#notifications').html(`<div class="notification">${message}</div>`);  
 }
+
+function addListitemListeners(listitemId) {
+  $(`#${listitemId} .purchase-button`).on('click', () => {
+    listPost(listitemId, 'purchased');
+  });
+  $(`#${listitemId} .lock-button`).on('click', () => {
+    listPost(listitemId, 'locked');
+  });
+  $(`#${listitemId} .delete-button`).on('click', () => {
+    listPost(listitemId, 'deleted');
+  });
+};
+
+function removeListitemListeners(listitemId) {
+  $(`#${listitemId} button`).off('click');
+};
+
+function listPost(listitemId, action) {
+  console.log(`listPost('${listitemId}' ,'${action}') called`);
+  removeListitemListeners(listitemId);
+};
