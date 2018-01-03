@@ -45,6 +45,7 @@ function emailPage() {
 
 // this is the "single page" of this SPA
 async function listPage(seg) {
+  $('#login').hide();
   // the function takes an array of pathname segments, split at "/"
   const familyId = seg[2];
   const memberId = seg[3]; 
@@ -133,11 +134,11 @@ function familyNotFound() {
 };
 
 function listPost(itemId, action) {
-  // notification(`${itemId} ${action}`);
   console.log(`listPost('${itemId}' ,'${action}') called`);
   removeItemListeners(itemId);
   lookBusy('list-holder', true);
   setTimeout(() => { lookBusy('list-holder', false) }, 5000);
+  setTimeout(() => { notification(`${action}`) }, 5700);
 };
 
 // notifications
