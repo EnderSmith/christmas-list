@@ -1,13 +1,12 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+function Member() {
+  return { 
+    memberId: String,
+    name: String,
+    email: String,
+    parent: Boolean,
+    deleted: Boolean,
+    list: Array
+  }
+}
 
-const MemberSchema = new Schema({
-  memberId: String,
-  name: String,
-  email: String,
-  parent: Boolean,
-  deleted: Boolean,
-  list: Array
-});
-
-module.exports = mongoose.model('Member', MemberSchema);
+module.exports = Member;

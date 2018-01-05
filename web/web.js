@@ -60,13 +60,7 @@ async function listPage(seg) {
   }
   // memberIndex is the index of the current member
   const currentMemberIndex = findMemberIndex(_g.family.members, memberId);
-  const list = _g.family.members[currentMemberIndex].list;
-  const listHtml = createListHtml(list);
-  $(`#memberlist-${currentMemberIndex}`).html(listHtml);
-  // adds button listeners for each item row in the list
-  for (const itemNumber in list) {
-    addItemListeners(`listitem-${itemNumber}`);
-  };
+  updateListView(currentMemberIndex);
 };
 
 function findMemberIndex(membersArray, memberId) {
@@ -77,6 +71,16 @@ function findMemberIndex(membersArray, memberId) {
     };
   };
   return memberIndex;
+};
+
+function updateListView(currentMemberIndex) {
+  const list = _g.family.members[currentMemberIndex].list;
+  const listHtml = createListHtml(list);
+  $(`#memberlist-${currentMemberIndex}`).html(listHtml);
+  // adds button listeners for each item row in the list
+  for (const itemNumber in list) {
+    addItemListeners(`listitem-${itemNumber}`);
+  };
 };
 
 function createListHtml(list) {
@@ -111,10 +115,6 @@ function removeItemListeners(itemId) {
   $(`#${itemId} button`).off('click');
 };
 
-function addListListeners(itemNumber, memberlistId) {
-
-};
-
 // API calls
 function emailPost() {
   const recipient = $('#email')[0].value;
@@ -126,6 +126,18 @@ function emailPost() {
 
 async function familyGet(familyId, memberId) {
   return await $.get(`/api/family/${familyId}/${memberId}`);
+};
+
+async function familyPut(familyId, memberId) {
+  return await $.ajax({
+    url: `/api/family/${familyId}/${memberId}`,
+    type: 'PUT',
+    data: JSON.stringify(_g.family),
+    headers: {
+      "Content-Type": "json"
+    },
+    dataType: 'json'
+  });
 };
 
 function familyNotFound() {

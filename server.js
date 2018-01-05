@@ -36,6 +36,7 @@ router.use((req, res, next) => {
 router.get('/api', (req, res) => {
   res.json({message: 'routing works'});
 });
+
 // POST new family
 router.post('/api/new/family', (req, res) => {
   const family = newFamily(req.body.name, req.body.email);
@@ -46,6 +47,7 @@ router.post('/api/new/family', (req, res) => {
     res.json(family);
   });
 })
+
 // GET family api
 router.get('/api/family/:familyId/:memberId', async (req, res) => {
   const family = await Family.findOne({ 'famId': req.params.familyId, 'members.memberId': req.params.memberId });
@@ -56,10 +58,27 @@ router.get('/api/family/:familyId/:memberId', async (req, res) => {
   }
 });
 
+// PUT family api
+router.put('/api/family/:familyId/:memberId', async (req, res) => {
+  let family = await Family.findOne({ 'famId': req.params.familyId, 'members.memberId': req.params.memberId });
+  if (!!family) {
+    family.members = req.body.members;
+    family.save((err) => {
+      if (err) {
+        res.send(err);
+      };
+    });
+  } else {
+    res.status(404).send('family not found by member');
+  }
+  res.status(200).send('save successful!')
+});
+
 // GET redirect member
 router.get('/family/:family_id/:member_id', async (req, res) => {
   res.sendFile('index.html', {root: './web'});
 });
+
 // PUT mark existing member as deleted
 
 // GET email test
@@ -102,13 +121,13 @@ function newFamily(name, email) {
   family.famId = uuid();
   const memberId = uuid();
   family.members = [];
-  const parent = new Member()
+  const parent = Member()
   parent.memberId = memberId;
-  parent.name = name;
+  parent.name = name || 'parent';
   parent.email = email;
   parent.parent = true;
   parent.deleted = false;
-  parent.list = {};
+  parent.list = [];
   family.members.push(parent);
   return family;
 };

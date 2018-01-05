@@ -1,13 +1,12 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+function ListItem() {
+  return {
+    title: String,
+    purchased: Boolean,
+    locked: Boolean,
+    deleted: Boolean,
+    updated: String,
+    updatedBy: String
+  };
+};
 
-const ListItemSchema = new Schema({
-  title: String,
-  purchased: Boolean,
-  locked: Boolean,
-  deleted: Boolean,
-  updated: String,
-  updatedBy: String
-});
-
-module.exports = mongoose.model('ListItem', ListItemSchema);
+module.exports = ListItem;
