@@ -62,7 +62,8 @@ router.get('/api/family/:familyId/:memberId', async (req, res) => {
 router.put('/api/family/:familyId/:memberId', async (req, res) => {
   let family = await Family.findOne({ 'famId': req.params.familyId, 'members.memberId': req.params.memberId });
   if (!!family) {
-    family.members = req.body.members;
+    const reqFamily = JSON.parse(req.headers.textbody);
+    family.members = reqFamily.members;
     family.save((err) => {
       if (err) {
         res.send(err);
