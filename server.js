@@ -89,21 +89,21 @@ router.get('/api/email-test', async (req, res) => {
 });
 // POST email
 router.post('/api/email', async (req, res) => {
-  let family = await Family.findOne({ 'members.email': req.body.email });
+  let family = await Family.findOne({ 'members.email': req.body.recipient });
   if (family === null) {
-    family = newFamily(req.body.name, req.body.email);
+    family = newFamily(req.body.name, req.body.recipient);
     family.save(async (err) => {
       if (err) {
         res.status(500).send(err);
       };
       const url = createUrl(family.famId, family.members[0].memberId);
-      const sentEmail = await UrlEmail.send(req.body.email, url);
+      const sentEmail = await UrlEmail.send(req.body.recipient, url);
       res.status(sentEmail.status).send(sentEmail.body); 
     });
   } else {
-    const member = family.members.find(member => member.email === req.body.email);
+    const member = family.members.find(member => member.email === req.body.recipient);
     const url = createUrl(family.famId, member.memberId);
-    const sentEmail = await UrlEmail.send(req.body.email, url);
+    const sentEmail = await UrlEmail.send(req.body.recipient, url);
     res.status(sentEmail.status).send(sentEmail.body);   
   }
 });
