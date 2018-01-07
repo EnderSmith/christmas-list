@@ -48,7 +48,7 @@ async function listPage(seg) {
   $('#login').hide();
   // the function takes an array of pathname segments, split at "/"
   const familyId = seg[2];
-  const memberId = seg[3]; 
+  const memberId = seg[3];
   try {
     _g.family = await familyGet(familyId, memberId);
   } catch (err) {
@@ -59,8 +59,9 @@ async function listPage(seg) {
     }
   }
   // memberIndex is the index of the current member
-  const currentMemberIndex = findMemberIndex(_g.family.members, memberId);
-  updateListView(currentMemberIndex);
+  _g.memberId = memberId;
+  _g.currentMemberIndex = findMemberIndex(_g.family.members, memberId);
+  updateListView(_g.currentMemberIndex);
 };
 
 function findMemberIndex(membersArray, memberId) {
@@ -79,8 +80,10 @@ function updateListView(currentMemberIndex) {
   $(`#memberlist-${currentMemberIndex}`).html(listHtml);
   // adds button listeners for each item row in the list
   for (const itemNumber in list) {
-    addItemListeners(`listitem-${itemNumber}`);
+    addPurchasedListener(`listitem-${itemNumber}`);
+    addDeletedListener(`listitem-${itemNumber}`);
   };
+  addNewItemListener();
 };
 
 function createListHtml(list) {
@@ -91,7 +94,6 @@ function createListHtml(list) {
     <span class="listitem-title">${item.title}</span>
     <button class="purchased-button">✔</button>
     <button class="edited-button">✏️</button>
-    <button class="locked-button">🔒</button>
     <button class="deleted-button">❌</button>
     </div>`;
   };
@@ -102,17 +104,31 @@ function createListHtml(list) {
 
 
 // event listeners
-function addItemListeners(itemId) {
-  const buttonNames = ['purchased', 'locked', 'deleted'];
-  for (const index in buttonNames) {
-    $(`#${itemId} .${buttonNames[index]}-button`).on('click', () => {
-    listPost(itemId, `${buttonNames[index]}`);
-    });
-  };
+function addPurchasedListener(itemId) {
+  $(`#${itemId} .purchased-button`).on('click', () => {
+    purchasedItem(itemId);
+  });
 };
 
-function removeItemListeners(itemId) {
-  $(`#${itemId} button`).off('click');
+function addDeletedListener(itemId) {
+  $(`#${itemId} .deleted-button`).on('click', () => {
+    deletedItem(itemId);
+  });
+};
+
+function addNewItemListener() {
+  $(`.new-button`).on('click', () => {
+    newItem();
+  });
+  $('.listitem-new-title').keypress((event) => {
+    if (event.which === 13) {
+      newItem();
+    };
+  });
+};
+
+function removeListListeners() {
+  $(`#list-holder div button`).off('click');
 };
 
 // API calls
@@ -129,12 +145,15 @@ async function familyGet(familyId, memberId) {
 };
 
 async function familyPut(familyId, memberId) {
+  const familyStringified = JSON.stringify(_g.family);
   return await $.ajax({
     url: `/api/family/${familyId}/${memberId}`,
     type: 'PUT',
-    data: JSON.stringify(_g.family),
+    data: familyStringified,
+    body: familyStringified,
     headers: {
-      "Content-Type": "json"
+      "Content-Type": "JSON",
+      "TextBody": familyStringified
     },
     dataType: 'json'
   });
@@ -145,12 +164,68 @@ function familyNotFound() {
   window.location.replace(`${seg[0]}//${seg[2]}/`);
 };
 
-function listPost(itemId, action) {
-  console.log(`listPost('${itemId}' ,'${action}') called`);
-  removeItemListeners(itemId);
+async function purchasedItem(itemId) {
   lookBusy('list-holder', true);
-  setTimeout(() => { lookBusy('list-holder', false) }, 5000);
-  setTimeout(() => { notification(`item marked as ${action}`) }, 5700);
+  const itemIndex = itemId.split('-')[1];
+  let markedAs = 'purchased';
+  if (_g.family.members[0].list[itemIndex].purchased === 'true') {
+    _g.family.members[0].list[itemIndex].purchased = 'false';
+    markedAs = 'not purchased'
+  } else {
+    _g.family.members[0].list[itemIndex].purchased = 'true';
+  };
+  try {
+    await familyPut(_g.family.famId, _g.family.members[_g.currentMemberIndex].memberId);
+  } catch(err) {
+    setTimeout(() => { lookBusy('list-holder', false) }, 1000);
+    setTimeout(() => { notification(`action failed`) }, 1700);
+  };
+  removeListListeners();
+  updateListView(0);
+  setTimeout(() => { lookBusy('list-holder', false) }, 1000);
+  setTimeout(() => { notification(`item marked as ${markedAs}.`) }, 1700);
+};
+
+async function deletedItem(itemId) {
+  lookBusy('list-holder', true);
+  const itemIndex = itemId.split('-')[1];
+  _g.family.members[0].list.splice(itemIndex, 1);
+  try {
+    await familyPut(_g.family.famId, _g.family.members[_g.currentMemberIndex].memberId);
+  } catch(err) {
+    setTimeout(() => { lookBusy('list-holder', false) }, 1000);
+    setTimeout(() => { notification(`action failed`) }, 1700);
+  };
+  removeListListeners();  
+  updateListView(0);
+  setTimeout(() => { lookBusy('list-holder', false) }, 1000);
+  setTimeout(() => { notification(`item deleted`) }, 1700);
+};
+
+async function newItem() {
+  const title = $(`.listitem-new-title`)[0].value;
+  if (!title || title.replace(/^\s+|\s+$/g, '').length === 0) {
+    notification('please input an item name');
+    return;
+  };
+  lookBusy('list-holder', true);
+  const item = {
+    title: title,
+    purchased: false,
+    updated: new Date(),
+    updatedBy: _g.memberId
+  };
+  _g.family.members[_g.currentMemberIndex].list.push(item);
+  try {
+    await familyPut(_g.family.famId, _g.family.members[_g.currentMemberIndex].memberId);
+  } catch(err) {
+    setTimeout(() => { lookBusy('list-holder', false) }, 1000);
+    setTimeout(() => { notification(`action failed`) }, 1700);
+  };
+  removeListListeners();  
+  updateListView(0);
+  setTimeout(() => { lookBusy('list-holder', false) }, 1000);
+  setTimeout(() => { notification(`item added`) }, 1700);
 };
 
 // notifications
