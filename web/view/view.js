@@ -73,8 +73,8 @@ const $v = {
         <div id="listitem-new">
           <input type="text" class="listitem-new-title" placeholder="${model.placeholder}">
           <div class="new-button">
-          <button class="new-button"><img src="/resource/img/redAdd.jpg"></button>
-        </div>`;
+            <button class="new-button"><img src="/resource/img/redAdd.jpg"></button>
+          </div>`;
     },
     notification: function(model) {
       return `

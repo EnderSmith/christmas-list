@@ -47,7 +47,7 @@ const $listCtrl = {
     });
   },
   addNewItemListener: () => {
-    $(`.new-button`).on('click', () => {
+    $(`button.new-button`).on('click', () => {
       $listCtrl.newItem();
     });
     $('.listitem-new-title').keypress((event) => {
@@ -58,6 +58,7 @@ const $listCtrl = {
   },
   removeItemListeners: () => {
     $(`#list-holder div button`).off('click');
+    $(`#list-holder .listitem-new-title`).off('keypress');
   },
   purchasedItem: async (itemId) => {
     $listCtrl.lookBusyWrapperForListButtons(() => {
