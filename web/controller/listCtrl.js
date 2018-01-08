@@ -74,15 +74,13 @@ const $listCtrl = {
     });
   },
   searchItem: async (itemId) => {
-    if ($(`#${itemId} div.searchResults`).css('display') === 'none' && $(`#${itemId} div.searchResults`).html()  === '') {
+    const results = $(`#${itemId} div.searchResults`);
+    if (results.css('display') === 'none') {
       const query = $(`#${itemId} span.listitem-title`).html();
       await $searchCtrl.loadSearchResultsView(query, `#${itemId} .searchResults`);
       $(`#${itemId} div.searchResults`).slideDown(1000);
-    } else if ($(`#${itemId} div.searchResults`).css('display') === 'none' && $(`#${itemId} div.searchResults`).html()  !== '') {
-      $(`#${itemId} div.searchResults`).slideDown(1000);
-      const query = $(`#${itemId} span.listitem-title`).html();
     } else {
-      $(`#${itemId} div.searchResults`).slideUp(1000);
+      results.slideUp(1000);     
     }
   },
   deletedItem: async (itemId) => {
@@ -111,11 +109,11 @@ const $listCtrl = {
       await $familyProvider.familyPut($mainCtrl.context.family.famId, $mainCtrl.context.family.members[$mainCtrl.context.currentMemberIndex].memberId);
     } catch(err) {
       setTimeout(() => { $mainCtrl.lookBusy('list-holder', false) }, 1000);
-      setTimeout(() => { $mainCtrl.notification(`action failed`) }, 1700);
+      setTimeout(() => { $mainCtrl.notification(`action failed`) }, 500);
     };
     $listCtrl.updateListView($mainCtrl.context.family.members[$mainCtrl.context.currentMemberIndex].list);
     setTimeout(() => { $mainCtrl.lookBusy('list-holder', false) }, 1000);
-    setTimeout(() => { $mainCtrl.notification(successNotification) }, 1700);
+    setTimeout(() => { $mainCtrl.notification(successNotification) }, 500);
   },
 
 }
