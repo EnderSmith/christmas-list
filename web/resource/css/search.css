@@ -1,23 +1,28 @@
+.searchResults {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
 .searchResults a {
-  color: black;
+  font-size: 12pt;
+  color: rgba(162, 49, 1, .80);
   text-decoration: none;
 }
 .searchResult {
   clear: right;
-  min-height: 15vmax;
-  max-height: 15vw;
+  min-height: 12vh;
+  max-height: 12vh;
 }
 .search-img {
   float: left;
-  width: 14vmax;
-  height: 14vmax;
+  width: 10vh;
+  height: 10vh;
 }
 .search-img img {
   display: block;
   margin: auto;
-  max-width: 14vmax;
-  max-height: 14vmax;
+  max-width: 10vh;
+  max-height: 10vh;
 }
 .search-title {
-  float: none;
+  padding-top: 3vh;
 }

@@ -1,13 +1,32 @@
-button {
+body {
+  font-family: sans-serif;
+  font-size: 16pt;
+  margin: 0px;
+  display: grid;
+  grid-template-columns: 1fr 13fr 1fr;
+  grid-template-rows: repeat(2, minmax(5vh, auto));
+  grid-column-gap: 1vw;
+  grid-row-gap: 1vh;
+}
+#app {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+#app button {
   background-color: white;
   border: 0;
   border-radius: 50%;
-  height: 5vh;
-  width: 5vh;
+  height: 2em;
+  width: 2em;
+  padding: 0;
+  cursor: pointer;
 }
-button img {
-  height: 3vh;
-  width: 3vh;
+#app button img {
+  height: 2em;
+  width: 2em;
   vertical-align: center;
   margin: auto;
 }
+

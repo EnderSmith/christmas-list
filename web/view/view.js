@@ -2,7 +2,6 @@ const $v = {
   page: {
     login: function() {
       return `
-        <div id="notifications"></div>
         <div id="login">
           enter your email: <br>
           <input type="email" name="email" id="email">
@@ -11,7 +10,6 @@ const $v = {
     },
     list: function(model) {
       return `
-        <div id="notifications"></div>
         <div id="list-holder" data-busy="false">
           <div class="spinner" style="display:none">spinning...</div>
           <div id="memberlist-0" class="memberlist">
@@ -51,18 +49,22 @@ const $v = {
   component: {
     header: function(model) {
       return `
+      <div class="logo"><img src="/resource/img/redLogo.jpg">Check-It-Twice</div>
       <button onclick="$mainCtrl.linkRouter('${model.list}')" class="headerbutton">List</button>
       <button onclick="$mainCtrl.linkRouter('${model.progress}')" class="headerbutton">Progress</button>
-      <button onclick="$mainCtrl.linkRouter('${model.about}')" class="headerbutton">About</button>`
+      <button onclick="$mainCtrl.linkRouter('${model.about}')" class="headerbutton about">About</button>
+      <div id="notifications"></div>`
     },
     item: function(model) { 
       return `
         <div id="listitem-${model.itemIndex}" class="listitem purchased-${model.purchased}">
           <span class="listitem-title">${model.title}</span>
-          <button class="purchased-button"><img src="/resource/img/redCheck.jpg"></button>
-          <button class="edited-button"><img src="/resource/img/redQuill.jpg"></button>
-          <button class="search-button"><img src="/resource/img/redSearch.jpg"></button>
-          <button class="deleted-button"><img src="/resource/img/redDelete.jpg"></button>
+          <div class="list-buttons">
+            <button class="purchased-button"><img src="/resource/img/redCheck.jpg"></button>
+            <button class="edited-button"><img src="/resource/img/redQuill.jpg"></button>
+            <button class="search-button"><img src="/resource/img/redSearch.jpg"></button>
+            <button class="deleted-button"><img src="/resource/img/redDelete.jpg"></button>
+          </div>
           <div class="searchResults" style="display:none;"></div>
         </div>`;
     },
@@ -70,12 +72,13 @@ const $v = {
       return `
         <div id="listitem-new">
           <input type="text" class="listitem-new-title" placeholder="${model.placeholder}">
+          <div class="new-button">
           <button class="new-button"><img src="/resource/img/redAdd.jpg"></button>
         </div>`;
     },
     notification: function(model) {
       return `
-        <div class="notification" style="display:none">
+        <div class="notification" style="display:none;">
           ${model.message}
         </div>`;
     },

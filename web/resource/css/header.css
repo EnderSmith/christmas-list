@@ -1,0 +1,48 @@
+#header {
+  color: #A23201;
+  background-color: #A23201; 
+  padding: .5em;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: 5;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, minmax(5vh, auto));
+  grid-column-gap: 1vw;
+  grid-row-gap: 1vh;
+}
+#header .logo {
+  font-style: italic;
+  font-size: 5vh;
+  background-color: white;
+  border-radius: 25vw;
+  padding: 2.5vh;
+  /* margin-bottom: .3em; */
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+#header .logo img {
+  height: .8em;
+  width: auto;
+}
+#header button {
+  color: #A23201;
+  background-color: white;
+  border: 0;
+  border-radius: 25vw;
+  height: 5vh;
+  padding: 1vh;
+  cursor: pointer;
+  grid-column-start: 4;
+  grid-column-end: 5;
+}
+#notifications {
+  color: white;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
