@@ -2,7 +2,7 @@ const $searchCtrl = {
   searchGet: async (query) => {
     const uri = new $m.GoogleCustomSearch(query).uri;
     const response = await $.get(uri);
-    const searchResults = response.items;
+    const searchResults = response.items || [];
     return searchResults;
   },
   createSearchResultsView: (searchResults) => {
@@ -14,8 +14,13 @@ const $searchCtrl = {
     return searchResultsView;
   },
   loadSearchResultsView: async (query, selector) => {
-    const searchResults = await $searchCtrl.searchGet(query);
-    const searchResultsView = $searchCtrl.createSearchResultsView(searchResults);
-    $(`${selector}`).html(searchResultsView);
+    const searchResults = await $searchCtrl.searchGet(query && query.trim());
+    if (searchResults.length > 0) {
+      const searchResultsView = $searchCtrl.createSearchResultsView(searchResults);
+      $(`${selector}`).html(searchResultsView);
+      return true;
+    } else {
+      return false;
+    }
   }
 }

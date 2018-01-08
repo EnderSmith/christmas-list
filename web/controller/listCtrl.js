@@ -77,8 +77,12 @@ const $listCtrl = {
     const results = $(`#${itemId} div.searchResults`);
     if (results.css('display') === 'none') {
       const query = $(`#${itemId} span.listitem-title`).html();
-      await $searchCtrl.loadSearchResultsView(query, `#${itemId} .searchResults`);
-      $(`#${itemId} div.searchResults`).slideDown(1000);
+      const results = await $searchCtrl.loadSearchResultsView(query, `#${itemId} .searchResults`);
+      if (results) {
+        $(`#${itemId} div.searchResults`).slideDown(1000);
+      } else {
+        setTimeout(() => { $mainCtrl.notification('No results found. Check spelling and try again.'); }, 500);        
+      }
     } else {
       results.slideUp(1000);     
     }
