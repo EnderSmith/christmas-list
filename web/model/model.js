@@ -28,7 +28,7 @@ const $m = {
     this.err = err;
   },
   GoogleCustomSearch: function (query) {
-    this.uri = `https://www.googleapis.com/customsearch/v1?key=AIzaSyBnB0b8PoUk4mD7O4lfoGM2Gp7u_W_-_hg&cx=018247707825542372112:i_39t_15tja&q=${query}`
+    this.uri = `https://www.googleapis.com/customsearch/v1?key=AIzaSyCo4Uqv9vFCuzrtYA7GDI19emO154x4CYs&cx=018247707825542372112:i_39t_15tja&q=${query}`
   },
   SearchResult: function (searchResultObject) {
     this.title = searchResultObject.htmlTitle;
