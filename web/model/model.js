@@ -41,10 +41,11 @@ const $m = {
   HeaderLinks: function (familyId, memberId) {
     if (!familyId || !memberId) {
       this.list = `/`;
+      this.progress = `/`;
     } else {
       this.list = `/family/${familyId}/${memberId}`;
+      this.progress = `/family/${familyId}/${memberId}/chart`;
     }
-    this.progress = `/family/${familyId}/${memberId}/chart`;
     this.about = `/about`;
   },
   Chart: function (members) {

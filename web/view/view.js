@@ -3,9 +3,9 @@ const $v = {
     login: function() {
       return `
         <div id="login">
-          enter your email: <br>
-          <input type="email" name="email" id="email">
-          <button id="emailSend">send</button>
+          enter your email to start a wish list: <br>
+          <input type="email" name="email" id="email" placeholder="example@email.com">
+          <button id="emailSend"><img src="/resource/img/redQuill.jpg"></button>
         </div>`;
     },
     list: function(model) {

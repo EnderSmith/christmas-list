@@ -1,6 +1,11 @@
 const $chartCtrl = {
   run: async () => {
-    await $familyCtrl.run();
+    try {
+      await $familyCtrl.run();
+    } catch (error) {
+      $loginCtrl.run();
+      return;
+    }
     $mainCtrl.loadHeader($mainCtrl.context.familyId, $mainCtrl.context.memberId);
     const members = $mainCtrl.context.family.members;
     $chartCtrl.loadView(members);

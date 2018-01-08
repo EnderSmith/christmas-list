@@ -29,4 +29,7 @@ body {
   vertical-align: center;
   margin: auto;
 }
-
+#app input {
+  font: inherit;
+  color:rgba(162, 49, 1)
+}

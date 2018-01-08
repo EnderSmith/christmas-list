@@ -16,10 +16,6 @@
   grid-column-gap: 1vw;
   grid-row-gap: 1vh;
 }
-#listitem-new input {
-  font: inherit;
-  color:rgba(162, 49, 1)
-}
 #listitem-new .new-button {
   grid-column-start: 2;
   grid-column-end: 3;
