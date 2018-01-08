@@ -1,5 +1,8 @@
 const $loginCtrl = {
   run: () => {
+    if ($('#header').html() === '') {
+      $mainCtrl.loadHeader();
+    }
     $loginCtrl.loadView();
     $loginCtrl.addLoginListeners();
   },

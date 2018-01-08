@@ -38,4 +38,13 @@ const $m = {
   SearchResultListHtml: function (searchResultListHtml) {
     this.searchResults = searchResultListHtml;
   },
+  HeaderLinks: function (familyId, memberId) {
+    if (!familyId || !memberId) {
+      this.list = `/`;
+    } else {
+      this.list = `/family/${familyId}/${memberId}`;
+    }
+    this.progress = `/progress`;
+    this.about = `/about`;
+  },
 }

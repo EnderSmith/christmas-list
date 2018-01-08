@@ -1,6 +1,7 @@
 const $listCtrl = {
   run: async () => {
     await $familyCtrl.run();
+    $mainCtrl.loadHeader($mainCtrl.context.familyId, $mainCtrl.context.memberId);
     $listCtrl.updateListView($mainCtrl.context.family.members[$mainCtrl.context.currentMemberIndex].list)
   },
   updateListView: (list) => {

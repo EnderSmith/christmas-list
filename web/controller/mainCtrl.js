@@ -1,8 +1,6 @@
 const $mainCtrl = {
   context: {
     family: {},
-    familyId: '',
-    memberId: '',
     currentMemberIndex: -1,
   },
   run: function() {  
@@ -11,6 +9,7 @@ const $mainCtrl = {
       const currentRoute = $mainCtrl.router(window.location, {
         'root' : $loginCtrl.run,
         'family' : $listCtrl.run,
+        'about' : $aboutCtrl.run
       });
     });
   },
@@ -56,6 +55,15 @@ const $mainCtrl = {
     const errorView = $v.component.serverError(errorModel);
     $('#app').html(errorView);
   },
+  linkRouter: (pathName) => {
+    const stateObject = { pathName: pathName };
+    window.history.pushState(stateObject, pathName, `${pathName}`);
+    $mainCtrl.router(window.location, {
+      'root' : $loginCtrl.run,
+      'family' : $listCtrl.run,
+      'about' : $aboutCtrl.run
+    });
+  },
   queryRouter: (query) => {
     const stateObject = { query: query };
     window.history.pushState(stateObject, query, `?search=${query}`);
@@ -66,4 +74,8 @@ const $mainCtrl = {
       window.history.replaceState(stateObject, 'list', location.pathname);
     }
   },
+  loadHeader: (familyId, memberId) => {
+    const headerLinksModel = new $m.HeaderLinks(familyId, memberId);
+    $(`#header`).html($v.component.header(headerLinksModel));
+  }
 }
