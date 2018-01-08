@@ -3,13 +3,14 @@ const $mainCtrl = {
     family: {},
     familyId: '',
     memberId: '',
-    currentMemberIndex: -1
+    currentMemberIndex: -1,
   },
   run: function() {  
     $(() => {
+      window.onpopstate = $mainCtrl.removeQueryRouter(window.location);
       const currentRoute = $mainCtrl.router(window.location, {
         'root' : $loginCtrl.run,
-        'family' : $listCtrl.run
+        'family' : $listCtrl.run,
       });
     });
   },
@@ -54,5 +55,15 @@ const $mainCtrl = {
     const errorModel = new $m.ServerError(err);
     const errorView = $v.component.serverError(errorModel);
     $('#app').html(errorView);
+  },
+  queryRouter: (query) => {
+    const stateObject = { query: query };
+    window.history.pushState(stateObject, query, `?search=${query}`);
+  },
+  removeQueryRouter: (location) => {
+    if (location.href.indexOf('?') !== -1) {
+      const stateObject = { ignore: null }
+      window.history.replaceState(stateObject, 'list', location.pathname);
+    }
   },
 }

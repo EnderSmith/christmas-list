@@ -1,0 +1,23 @@
+.searchResults a {
+  color: black;
+  text-decoration: none;
+}
+.searchResult {
+  clear: right;
+  min-height: 15vmax;
+  max-height: 15vw;
+}
+.search-img {
+  float: left;
+  width: 14vmax;
+  height: 14vmax;
+}
+.search-img img {
+  display: block;
+  margin: auto;
+  max-width: 14vmax;
+  max-height: 14vmax;
+}
+.search-title {
+  float: none;
+}
