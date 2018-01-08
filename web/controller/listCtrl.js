@@ -78,14 +78,11 @@ const $listCtrl = {
       const query = $(`#${itemId} span.listitem-title`).html();
       await $searchCtrl.loadSearchResultsView(query, `#${itemId} .searchResults`);
       $(`#${itemId} div.searchResults`).slideDown(1000);
-      $mainCtrl.queryRouter(query);
     } else if ($(`#${itemId} div.searchResults`).css('display') === 'none' && $(`#${itemId} div.searchResults`).html()  !== '') {
       $(`#${itemId} div.searchResults`).slideDown(1000);
       const query = $(`#${itemId} span.listitem-title`).html();
-      $mainCtrl.queryRouter(query);
     } else {
       $(`#${itemId} div.searchResults`).slideUp(1000);
-      $mainCtrl.removeQueryRouter(window.location);
     }
   },
   deletedItem: async (itemId) => {

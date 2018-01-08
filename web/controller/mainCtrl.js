@@ -5,7 +5,6 @@ const $mainCtrl = {
   },
   run: function() {  
     $(() => {
-      window.onpopstate = $mainCtrl.removeQueryRouter(window.location);
       const currentRoute = $mainCtrl.router(window.location, {
         'root' : $loginCtrl.run,
         'family' : $listCtrl.run,
@@ -68,16 +67,6 @@ const $mainCtrl = {
       'chart' : $chartCtrl.run,
       'about' : $aboutCtrl.run
     });
-  },
-  queryRouter: (query) => {
-    const stateObject = { query: query };
-    window.history.pushState(stateObject, query, `?search=${query}`);
-  },
-  removeQueryRouter: (location) => {
-    if (location.href.indexOf('?') !== -1) {
-      const stateObject = { ignore: null }
-      window.history.replaceState(stateObject, 'list', location.pathname);
-    }
   },
   loadHeader: (familyId, memberId) => {
     const headerLinksModel = new $m.HeaderLinks(familyId, memberId);
