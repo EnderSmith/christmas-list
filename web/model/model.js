@@ -70,18 +70,20 @@ const $m = {
         ]
       },
       options: {
+        responsive: true,
         title: {
           display: true,
           text: 'Member Lists (total v purchased)'
+        },
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              min: 0
+            }
+          }]
         }
       },
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
     };
   }
 }
