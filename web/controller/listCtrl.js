@@ -77,11 +77,20 @@ const $listCtrl = {
     const results = $(`#${itemId} div.searchResults`);
     if (results.css('display') === 'none') {
       const query = $(`#${itemId} span.listitem-title`).html();
-      const results = await $searchCtrl.loadSearchResultsView(query, `#${itemId} .searchResults`);
-      if (results) {
-        $(`#${itemId} div.searchResults`).slideDown(1000);
-      } else {
-        setTimeout(() => { $mainCtrl.notification('No results found. Check spelling and try again.'); }, 500);        
+      try {
+        const results = await $searchCtrl.loadSearchResultsView(query, `#${itemId} .searchResults`);
+        if (results) {
+          $(`#${itemId} div.searchResults`).slideDown(1000);
+        } else {
+          setTimeout(() => { $mainCtrl.notification('No results found. Check spelling and try again.'); }, 500);        
+        }
+      } catch (ex) {
+        if (ex.status === 403) {
+          setTimeout(() => { $mainCtrl.notification('Google search limit exceeded. Try again later'); }, 500);
+        } else {
+          const error = ex.responseJSON && ex.responseJSON.error && ex.responseJSON.message || 'Uknown error occurred. Try again later';
+          setTimeout(() => { $mainCtrl.notification(`Error: ${error}`); }, 500);          
+        }
       }
     } else {
       results.slideUp(1000);     
