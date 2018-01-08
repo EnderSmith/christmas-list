@@ -57,7 +57,7 @@ const $v = {
           <button class="edited-button">✏️</button>
           <button class="search-button">🔍</button>
           <button class="deleted-button">❌</button>
-          <div class="searchResults" style="display: none"></div>
+          <div class="searchResults" style="display:none;"></div>
         </div>`;
     },
     itemInput: function(model) {
