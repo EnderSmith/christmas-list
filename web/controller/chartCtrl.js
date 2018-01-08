@@ -1,7 +1,7 @@
 const $chartCtrl = {
   run: async () => {
     try {
-      await $familyCtrl.run();
+      await $familyProvider.run();
     } catch (error) {
       $loginCtrl.run();
       return;

@@ -1,15 +1,15 @@
-const $familyCtrl = {
+const $familyProvider = {
   run: async () => {
     const pathSeg = $mainCtrl.splitPath(window.location);
     $mainCtrl.context.familyId = pathSeg[2];
     $mainCtrl.context.memberId = pathSeg[3];
     try {
-      $mainCtrl.context.family = await $familyCtrl.familyGet($mainCtrl.context.familyId, $mainCtrl.context.memberId);
+      $mainCtrl.context.family = await $familyProvider.familyGet($mainCtrl.context.familyId, $mainCtrl.context.memberId);
     } catch(err) {
       $mainCtrl.serverError(err);
       return err;
     };
-    $mainCtrl.context.currentMemberIndex = $familyCtrl.findMemberIndex($mainCtrl.context.family.members, $mainCtrl.context.memberId)
+    $mainCtrl.context.currentMemberIndex = $familyProvider.findMemberIndex($mainCtrl.context.family.members, $mainCtrl.context.memberId)
   },
   findMemberIndex: (membersArray, memberId) => {
     let memberIndex = -1;
@@ -25,16 +25,16 @@ const $familyCtrl = {
   },
   familyPut: async (familyId, memberId) => {
     const familyStringified = JSON.stringify($mainCtrl.context.family);
-    return await $.ajax({
+    return new Promise((resolve, reject) => $.ajax({
       url: `/api/family/${familyId}/${memberId}`,
       type: 'PUT',
       data: familyStringified,
-      body: familyStringified,
       headers: {
-        "Content-Type": "JSON",
-        "TextBody": familyStringified
+        "Content-Type": "application/json"
       },
-      dataType: 'json'
-    });
+      dataType: 'json',
+      success: resolve,
+      error: (xhr, options, error) => reject(error)
+    }));
   }
 }

@@ -44,8 +44,9 @@ router.post('/api/new/family', (req, res) => {
   family.save((err) => {
     if (err) {
       res.status(500).send(err);
-    };
-    res.json(family);
+    } else {
+      res.json(family);
+    }
   });
 })
 
@@ -63,17 +64,18 @@ router.get('/api/family/:familyId/:memberId', async (req, res) => {
 router.put('/api/family/:familyId/:memberId', async (req, res) => {
   let family = await Family.findOne({ 'famId': req.params.familyId, 'members.memberId': req.params.memberId });
   if (!!family) {
-    const reqFamily = JSON.parse(req.headers.textbody);
+    const reqFamily = req.body;
     family.members = reqFamily.members;
     family.save((err) => {
       if (err) {
-        res.send(err);
-      };
+        res.status(500).send(err);
+      } else {
+        res.status(200).json(family);
+      }
     });
   } else {
     res.status(404).send('family not found by member');
   }
-  res.status(200).send('save successful!')
 });
 
 // GET redirect member
@@ -102,10 +104,11 @@ router.post('/api/email', async (req, res) => {
     family.save(async (err) => {
       if (err) {
         res.status(500).send(err);
-      };
-      const url = createUrl(family.famId, family.members[0].memberId);
-      const sentEmail = await UrlEmail.send(req.body.recipient, url);
-      res.status(sentEmail.status).send(sentEmail.body); 
+      } else {
+        const url = createUrl(family.famId, family.members[0].memberId);
+        const sentEmail = await UrlEmail.send(req.body.recipient, url);
+        res.status(sentEmail.status).send(sentEmail.body); 
+      }
     });
   } else {
     const member = family.members.find(member => member.email === req.body.recipient);

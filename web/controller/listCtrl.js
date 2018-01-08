@@ -1,12 +1,12 @@
 const $listCtrl = {
   run: async () => {
-    await $familyCtrl.run();
+    await $familyProvider.run();
     $mainCtrl.loadHeader($mainCtrl.context.familyId, $mainCtrl.context.memberId);
     $listCtrl.updateListView($mainCtrl.context.family.members[$mainCtrl.context.currentMemberIndex].list)
   },
   updateListView: (list) => {
     $listCtrl.removeItemListeners();
-    $familyCtrl.run();
+    $familyProvider.run();
     const listView = $listCtrl.createListView(list);
     $listCtrl.loadView(listView);
     for (const itemIndex in list) {
@@ -110,7 +110,7 @@ const $listCtrl = {
     $mainCtrl.lookBusy('list-holder', true);
     const successNotification = script() || '';
     try {
-      await $familyCtrl.familyPut($mainCtrl.context.family.famId, $mainCtrl.context.family.members[$mainCtrl.context.currentMemberIndex].memberId);
+      await $familyProvider.familyPut($mainCtrl.context.family.famId, $mainCtrl.context.family.members[$mainCtrl.context.currentMemberIndex].memberId);
     } catch(err) {
       setTimeout(() => { $mainCtrl.lookBusy('list-holder', false) }, 1000);
       setTimeout(() => { $mainCtrl.notification(`action failed`) }, 1700);
