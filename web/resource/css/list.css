@@ -3,11 +3,14 @@
   grid-template-columns: 6fr 4fr;
   grid-auto-rows: auto;
   grid-column-gap: 1vw;
-  grid-row-gap: 1vh;
+}
+.listitem.purchased-true .listitem-title {
+  background-color: green;
 }
 .listitem .list-buttons {
   grid-column-start: 2;
   grid-column-end: 3;
+  text-align: right;
 }
 #listitem-new {
   display: grid;
@@ -15,8 +18,13 @@
   grid-auto-rows: minmax(5vh, auto);
   grid-column-gap: 1vw;
   grid-row-gap: 1vh;
+  
 }
-#listitem-new .new-button {
+#listitem-new>.new-button {
   grid-column-start: 2;
   grid-column-end: 3;
+  text-align: right;
+}
+#listitem-new input {
+  width: 100%;
 }
