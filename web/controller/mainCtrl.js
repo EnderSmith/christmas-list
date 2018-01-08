@@ -9,6 +9,7 @@ const $mainCtrl = {
       const currentRoute = $mainCtrl.router(window.location, {
         'root' : $loginCtrl.run,
         'family' : $listCtrl.run,
+        'chart' : $chartCtrl.run,
         'about' : $aboutCtrl.run
       });
     });
@@ -18,6 +19,9 @@ const $mainCtrl = {
     let routeName = 'root';
     if (pathSeg.length > 1) {
       routeName = pathSeg[1];
+    }
+    if (pathSeg.length === 5) {
+      routeName = pathSeg[4];
     }
     let route = routes[routeName];
     if (!route) {
@@ -61,6 +65,7 @@ const $mainCtrl = {
     $mainCtrl.router(window.location, {
       'root' : $loginCtrl.run,
       'family' : $listCtrl.run,
+      'chart' : $chartCtrl.run,
       'about' : $aboutCtrl.run
     });
   },

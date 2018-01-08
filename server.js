@@ -80,7 +80,7 @@ router.put('/api/family/:familyId/:memberId', async (req, res) => {
 router.get('/family/:family_id/:member_id', async (req, res) => {
   res.sendFile('index.html', {root: './web'});
 });
-router.get('/progress', async (req, res) => {
+router.get('/family/:family_id/:member_id/chart', async (req, res) => {
   res.sendFile('index.html', {root: './web'});
 });
 router.get('/about', async (req, res) => {

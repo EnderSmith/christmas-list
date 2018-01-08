@@ -44,7 +44,43 @@ const $m = {
     } else {
       this.list = `/family/${familyId}/${memberId}`;
     }
-    this.progress = `/progress`;
+    this.progress = `/family/${familyId}/${memberId}/chart`;
     this.about = `/about`;
   },
+  Chart: function (members) {
+    const color = Chart.helpers.color;
+    this.chart = {
+      type: 'bar',
+      data: {
+        labels: members.map((m, i) => `Member ${i + 1}`),
+        datasets: [
+          {
+            label: 'Total',
+            backgroundColor: 'rgb(255,0,0)',
+            borderWidth: 5,
+            data: members.map(m =>  m.list.length)
+          },
+          {
+            label: 'Purchased',
+            backgroundColor: 'rgb(0,255,0)',
+            borderWidth: 5,
+            data: members.map(m => m.list.reduce((count, item) => count + (!!item.purchased ? 1 : 0), 0))
+          }
+        ]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Member Lists (total v purchased)'
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    };
+  }
 }

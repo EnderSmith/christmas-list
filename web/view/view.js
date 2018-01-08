@@ -19,6 +19,12 @@ const $v = {
           </div>
         </div>`;
     },
+    chart: function(model) {
+      return `
+      <div id="chart">
+        <canvas id="myChart"></canvas>
+      </div>`;
+    },
     about: function() {
       return `
       <div id="about">
@@ -53,10 +59,10 @@ const $v = {
       return `
         <div id="listitem-${model.itemIndex}" class="listitem purchased-${model.purchased}">
           <span class="listitem-title">${model.title}</span>
-          <button class="purchased-button">✔</button>
-          <button class="edited-button">✏️</button>
-          <button class="search-button">🔍</button>
-          <button class="deleted-button">❌</button>
+          <button class="purchased-button"><img src="/resource/img/redCheck.jpg"></button>
+          <button class="edited-button"><img src="/resource/img/redQuill.jpg"></button>
+          <button class="search-button"><img src="/resource/img/redSearch.jpg"></button>
+          <button class="deleted-button"><img src="/resource/img/redDelete.jpg"></button>
           <div class="searchResults" style="display:none;"></div>
         </div>`;
     },
@@ -64,7 +70,7 @@ const $v = {
       return `
         <div id="listitem-new">
           <input type="text" class="listitem-new-title" placeholder="${model.placeholder}">
-          <button class="new-button">➕</button>
+          <button class="new-button"><img src="/resource/img/redAdd.jpg"></button>
         </div>`;
     },
     notification: function(model) {
