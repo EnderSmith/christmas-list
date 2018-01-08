@@ -10,6 +10,7 @@ const $listCtrl = {
     $listCtrl.loadView(listView);
     for (const itemIndex in list) {
       $listCtrl.addPurchasedListeners(`listitem-${itemIndex}`);
+      $listCtrl.addSearchListeners(`listitem-${itemIndex}`);
       $listCtrl.addDeletedListeners(`listitem-${itemIndex}`);
     };
     $listCtrl.addNewItemListener();
@@ -32,6 +33,11 @@ const $listCtrl = {
   addPurchasedListeners: (itemId) => {
     $(`#${itemId} .purchased-button`).on('click', () => {
       $listCtrl.purchasedItem(itemId);
+    });
+  },
+  addSearchListeners: (itemId) => {
+    $(`#${itemId} .search-button`).on('click', () => {
+      $listCtrl.searchItem(itemId);
     });
   },
   addDeletedListeners: (itemId) => {
@@ -64,6 +70,21 @@ const $listCtrl = {
       };
       return `item marked as ${markedAs}`;
     });
+  },
+  searchItem: async (itemId) => {
+    if ($(`#${itemId} div.searchResults`).css('display') === 'none' && $(`#${itemId} div.searchResults`).html()  === '') {
+      const query = $(`#${itemId} span.listitem-title`).html();
+      await $searchCtrl.loadSearchResultsView(query, `#${itemId} .searchResults`);
+      $(`#${itemId} div.searchResults`).slideDown(1000);
+      $mainCtrl.queryRouter(query);
+    } else if ($(`#${itemId} div.searchResults`).css('display') === 'none' && $(`#${itemId} div.searchResults`).html()  !== '') {
+      $(`#${itemId} div.searchResults`).slideDown(1000);
+      const query = $(`#${itemId} span.listitem-title`).html();
+      $mainCtrl.queryRouter(query);
+    } else {
+      $(`#${itemId} div.searchResults`).slideUp(1000);
+      $mainCtrl.removeQueryRouter(window.location);
+    }
   },
   deletedItem: async (itemId) => {
     $listCtrl.lookBusyWrapperForListButtons(() => {

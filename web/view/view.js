@@ -27,8 +27,10 @@ const $v = {
           <span class="listitem-title">${model.title}</span>
           <button class="purchased-button">✔</button>
           <button class="edited-button">✏️</button>
+          <button class="search-button">🔍</button>
           <button class="deleted-button">❌</button>
-        </div>`; 
+          <div class="searchResults" style="display: none"></div>
+        </div>`;
     },
     itemInput: function(model) {
       return `
@@ -45,7 +47,16 @@ const $v = {
     },
     serverError: function(model) {
       return `
-      <div class="error">${model.err}</div>`
-    }
+        <div class="error">${model.err}</div>`;
+    },
+    searchResult: function(model) {
+      return `
+        <a href="${model.href}">
+          <div class="searchResult">
+            <div class="search-img"><img src="${model.img}"></div>
+            <span class="search-title">${model.title}</span>
+          </div>
+        </a>`;
+    },
   }
 };
