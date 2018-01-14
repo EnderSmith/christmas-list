@@ -6,4 +6,4 @@ Check-It-Twice is a holiday wish list organizer. It is designed to help you keep
 
 While, for now only single-member families are supported, later versions will allow you to add members to your family, as children or parents. Parents will be able to see and edit their children's wish lists, and track how many gifts are left for the whole family.
 
-check-it-twice.heokuapp.com
+check-it-twice.herokuapp.com
